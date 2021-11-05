@@ -14,13 +14,16 @@ USER=XXX
 PW=XXXX
 HOST=XXX
 START=1
-STOP=10
+STOP=2
  
 PORT=3306
  
 INNER_SLEEP=0.5
  
- 
+ #
+ # if database kyle doesn't exist, create it and seed table with 4M rows
+ # otherwise error out and go to next section to run load queries
+ #
   for i in 1; do
      cat << EOF
      create database kyle;
