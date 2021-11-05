@@ -25,7 +25,6 @@ INNER_SLEEP=0.5
      cat << EOF
      create database kyle;
      use kyle;
-     drop table seed;
      CREATE TABLE seed ( id INT AUTO_INCREMENT PRIMARY KEY, val INT);
      insert into seed(val) values (1);
      insert into seed(val) select val from seed;  /*  2 */
