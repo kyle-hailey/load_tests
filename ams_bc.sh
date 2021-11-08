@@ -1,7 +1,7 @@
 
-USER=kylelf
+USER=XXXX
 INSTANCE=postgres
-PW=Vigil20!
+PW=XXX
 PORT=3306
 HOSTS="host1 host2 host3"
 
