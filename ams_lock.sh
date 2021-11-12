@@ -46,8 +46,8 @@ EOF
 done
 
 
-#for j in  4 8 16 32 64 128; do
-for j in  400; do
+for j in  4 8 16 32 64 128; do
+#for j in  400; do
 #for j in  1; do
   STOP=$j
   for i in `seq $START $STOP`; do
