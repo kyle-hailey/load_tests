@@ -1,3 +1,21 @@
+# 
+# set your database user USER
+# set password for that user, PW
+# put database endpoints/hosts in HOSTS
+# can put one or serveral. Tests will be run with same user on each endpoint
+# test creates database kyle if it doesn't exist and table kyle.seed if it doesn't exit
+# then it runs concurrent N users going from 4 8 16 32 64 128
+# for each connection it creates a table seedN if it doesn't exist 
+# it the runs nested loops on SeedN
+# it runs an insert between selects to invalidate query caching if that is enabled.
+# It lets queries run for about 30 minutes SLEEP_AFTER_TEST (timing isn't exact at all)
+# it then sleeps 2 hours between tests SLEEP_BETWEEN_TESTS
+#
+#
+
+
+
+
 USER=XX
 PW=XX
 HOSTS="A B C D"
