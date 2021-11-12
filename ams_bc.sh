@@ -1,28 +1,20 @@
-
-USER=XXXX
+USER=XX
+PW=XX
+HOSTS="A B C D"
 INSTANCE=postgres
-PW=XXX
 PORT=3306
-HOSTS="host1 host2 host3"
-
-
 MYTEST=`date '+%s'`
 MYTMP="/tmp/bc${MYTEST}.sql"
-
 START=1
-PORT=3306
-
 INNER_SLEEP=0.5
 SLEEP_AFTER_TEST=1000
 SLEEP_BETWEEN_TESTS=7200
-
 FORCE_CREATE=${1-0}
 echo "FORCE_CREATE $FORCE_CREATE"
-
 for HOST in $HOSTS; do
   for i in 1; do
      cat << EOF
-     -- create database kyle;
+     create database kyle;
      use kyle;
      CREATE TABLE seed ( id INT AUTO_INCREMENT PRIMARY KEY, val INT);
      insert into seed(val) values (1);
@@ -63,10 +55,6 @@ EOF
     wait
     echo "end of create"
 done
- 
-
-
-
 for j in  4 8 16 32 64 128; do
   STOP=$j
   for i in `seq $START $STOP`; do
@@ -105,4 +93,3 @@ for j in  4 8 16 32 64 128; do
   echo "sleeping $SLEEP_BETWEEN_TESTS ........................... "
   sleep $SLEEP_BETWEEN_TESTS
 done
-
