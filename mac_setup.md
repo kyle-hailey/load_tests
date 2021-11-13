@@ -116,3 +116,71 @@ mysql-cli
     sudo pip install mssql-cli --ignore-installed six 
  
     mssql-cli -S <HOST>,1433 -U <USER> -P <PASSWORD>
+
+psql.sh
+
+    HOST= 
+    INSTANCE=postgres
+    export PGPASSWORD= 
+    PORT=5432
+
+    cmd="psql -h $HOST -p $PORT -U $USER  $INSTANCE "
+    echo $cmd
+    eval $cmd
+    
+mysql.sh
+
+    HOST=
+    USER=
+    PW=
+    PORT=3306
+    echo "/usr/local/bin/mysql --host=$HOST  --user=$USER  --password=$PW --port=$PORT mysql"
+    /usr/local/bin/mysql --host=$HOST  --user=$USER  --password=$PW  -A mysql
+   
+sqlplus.s
+
+#!/bin/bash
+
+    # DYLD_LIBRARY_PATH=/Applications/oracle/product/instantclient_64/11.2.0.4.0/bin sqlplus "$UN/$PW @ (DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$HOST)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=orcl)))"
+   
+   alias sqlplus="DYLD_LIBRARY_PATH=/Applications/oracle/product/instantclient_64/11.2.0.4.0/bin sqlplus"
+
+   function usage
+   {
+          echo "Usage: $(basename $0) <username> <password> <host> [sid] [port]"
+          echo "  username        database username"
+          echo "  username        database password"
+          echo "  host            hostname or IP address"
+          echo "  sid             optional database sid (default: orcl)"
+          echo "  port            optional database port (default: 1521)"
+          echo "  script          optional database script (defaultt: empty)"
+          exit 2
+   }
+
+   [[ $# -lt 3 ]] && usage
+   [[ $# -gt 6 ]] && usage
+
+   UN=$1
+   PW=$2
+   HOST=$3
+   SID=orcl
+   PORT=1521
+
+   [[ $# -gt 3 ]] && SID=$4
+   [[ $# -gt 4 ]] && PORT=$5
+   [[ $# -gt 5 ]] && SCRIPT="@$6"
+
+
+   cmd="DYLD_LIBRARY_PATH=/Applications/oracle/product/instantclient_64/11.2.0.4.0/bin sqlplus  \"$UN/$PW@\
+                     (DESCRIPTION=\
+                        (ADDRESS_LIST=\
+                           (ADDRESS=\
+                              (PROTOCOL=TCP)\
+                              (HOST=$HOST)\
+                              (PORT=$PORT)))\
+                        (CONNECT_DATA=\
+                           (SERVER=DEDICATED)\
+                           (SERVICE_NAME=$SID)))\" $SCRIPT "
+   echo $cmd
+   eval $cmd
+    
