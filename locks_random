@@ -1,0 +1,184 @@
+MySQL
+
+SET PERSIST innodb_lock_wait_timeout = 120;
+SET SESSION innodb_lock_wait_timeout = 500 ;
+
+
+
+show variables like '%lock_wait%';
++--------------------------+----------+
+| Variable_name            | Value    |
++--------------------------+----------+
+| innodb_lock_wait_timeout | 50       |
+| lock_wait_timeout        | 31536000 |
++--------------------------+----------+
+ 
+
+setup
+
+create database lockingtest;
+use lockingtest
+-- \c lockingtest
+create table bar (foo varchar(10));
+insert into bar values ('one');
+insert into bar values ('two');
+commit;
+
+
+lock1.sql
+
+use lockingtest
+start transaction;
+select foo from bar where foo = 'one' for update;
+select sleep(15);
+
+lock2.sql
+
+
+use lockingtest
+start transaction;
+select foo from bar where foo in ('one','two') for update;
+select sleep(20);
+
+lock3.sql
+
+use lockingtest
+start transaction;
+select foo from bar where foo = ('two') for update;
+select sleep(30);
+
+lock4.sql
+
+use lockingtest
+start transaction;
+select foo from bar where foo = ('one') for update;
+select sleep(30);
+
+
+locks_ams.sh
+
+
+#/bin/bash -x
+export HOST=kylelfams56.cydv3phrttxu.us-west-2.rds.amazonaws.com
+export USER=kylelf
+export PW=Vigil20!
+for a in `seq 1 100000`; do
+   RND=$(( ( RANDOM % 3 ) + 1 ))
+   echo "for i in 1 $RND"
+   for i in `seq 1 $RND`; do
+     echo " locks"
+     mysql -h $HOST -u $USER  -p$PW < lock1.sql &
+     mysql -h $HOST -u $USER  -p$PW < lock2.sql &
+     mysql -h $HOST -u $USER  -p$PW < lock3.sql &
+     mysql -h $HOST -u $USER  -p$PW < lock4.sql &
+     sleep 2
+   done
+   RND=$(( ( RANDOM % 2500 ) + 1 ))
+   echo "sleep $RND"
+   sleep $RND
+done
+
+
+
+
+_*Massive locking*_
+
+create database lockingtest
+use lockingtest
+ create table bar (foo varchar(10));
+ insert into bar values ('one');
+ commit;
+
+then have sql file: *lock.sql*
+
+use lockingtest
+start transaction;
+select foo from bar where foo = ('one') for update;
+
+then a shell script:
+
+for a in `seq 1 600`; do
+mysql --xxxx.us-east-1-integ.rds.amazonaws.com \
+      --user=myadmin \
+      --password=password < lock.sql &
+done
+
+
+
+
+*postgres*
+
+
+
+create database lockingtest;
+\c lockingtest
+create table bar (foo varchar(10));
+insert into bar values ('one');
+insert into bar values ('two');
+commit;
+
+
+
+lock1p.sql
+
+\c lockingtest
+start transaction;
+select foo from bar where foo = 'one' for update;
+select pg_sleep(15);
+
+lock2p.sql
+
+
+\c lockingtest
+start transaction;
+select foo from bar where foo in ('one','two') for update;
+select pg_sleep(20);
+
+
+lock3p.sql
+
+
+\c lockingtest
+start transaction;
+select foo from bar where foo = ('two') for update;
+select pg_sleep(30);
+
+
+lock4p.sql
+
+
+\c lockingtest
+start transaction;
+select foo from bar where foo = ('one') for update;
+select pg_sleep(30);
+
+
+lock_rpg.sh
+
+USER=kylelf
+INSTANCE=postgres
+export PGPASSWORD=Vigil20!
+PORT=5432
+HOST=kylelfpg10r1.cydv3phrttxu.us-west-2.rds.amazonaws.com
+
+
+export USER=kylelf
+export PW=Vigil20!
+for a in `seq 1 100000`; do
+   RND=$(( ( RANDOM % 4 ) + 1 ))
+   echo "for i in 1 $RND"
+   for i in `seq 1 $RND`; do
+     echo " locks"
+     for j in `seq 1 4`; do
+        cmd="psql -h $HOST -p $PORT -U $USER  $INSTANCE -f lock${j}p.sql"
+        echo $cmd
+        eval $cmd  &
+     done
+     sleep 2
+   done
+   RND=$(( ( RANDOM % 2500 ) + 1 ))
+   echo "sleep $RND"
+   sleep $RND
+done
+~   
+
