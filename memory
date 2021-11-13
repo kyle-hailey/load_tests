@@ -1,0 +1,89 @@
+
+
+-- Postgres
+
+create or replace procedure allocate_mem2(
+    n integer,
+    sz integer,
+    br integer,
+    sl float
+)
+language plpgsql
+as $$
+declare
+    a_result integer array;
+    a_delta integer array;
+begin
+    for i in 1 .. n loop
+        a_delta := array_fill(i, array[sz]);
+        a_result := array_cat(a_result, a_delta);
+        if (i % br) = 0 then
+            perform pg_sleep(sl);
+        end if;
+    end loop;
+end;
+ $$
+;
+ 
+ 
+ -- runs for long time ...
+ call allocate_mem2(10000,1000,10000, 0.0 );
+ 
+--runs in a few seconds
+ call allocate_mem2(1000,1000,1000, 0.0 );
+
+
+
+-- Mysql
+-- temp table full check 
+-- https://stackoverflow.com/questions/9842720/how-to-make-the-mysql-memory-engine-store-more-data
+
+Using in Memory TEMP table
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS mem$$
+CREATE PROCEDURE mem(loops INT, SIZE INT)
+BEGIN
+DECLARE counter int;
+DROP TEMPORARY TABLE IF EXISTS mem_temp1;
+CREATE TEMPORARY TABLE mem_temp1( id bigint, val varchar(32000)) ENGINE=memory;
+set counter=1;
+WHILE counter <= loops DO
+  SET counter = counter + 1;
+  insert into mem_temp1(ID,VAL) values (counter, lpad('a',size,'a'));
+END WHILE;
+-- insert into mem select count(*), 'count' from mem_temp;
+END$$
+DELIMITER ;  
+
+  set tmp_table_size=5077721600;
+  set max_heap_table_size=5077721600;
+  call mem(100,30000);
+  
+  
+  select * from mem;
+  
+  call mem(5000,100000)
+
+
+without Memory specification on TEMP table
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS mem_tmp$$
+CREATE PROCEDURE mem_tmp(loops INT, SIZE INT)
+BEGIN
+DECLARE counter int;
+DROP TEMPORARY TABLE IF EXISTS mem_tmp;
+CREATE TEMPORARY TABLE mem_tmp( id bigint, val varchar(32000));
+set counter=1;
+WHILE counter <= loops DO
+  SET counter = counter + 1;
+  insert into mem_tmp(ID,VAL) values (counter, lpad('a',size,'a'));
+END WHILE;
+-- insert into mem select count(*), 'count' from mem_temp;
+END$$
+DELIMITER ;  
+
+  call mem_tmp(10000,100000);
+
