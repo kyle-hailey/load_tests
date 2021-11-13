@@ -1,0 +1,37 @@
+
+  set tmp_table_size=50000;
+  set max_heap_table_size=50000;
+
+
+select  
+       Time_zone_id, 
+       Transition_time, 
+       Transition_type_id, 
+       Create_tablespace_priv, 
+       count(*)
+ from 
+       ( select 
+                u.*, 
+                t.*
+         from 
+                mysql.time_zone_transition t, 
+                mysql.time_zone_transition t2, 
+                mysql.user u 
+         order  by authentication_string )  a
+;
+
+select  
+        Time_zone_id, 
+        Transition_time, 
+        Transition_type_id, 
+        Create_tablespace_priv, 
+        count(*) 
+from ( select 
+                u.*, 
+                t.*  
+       from mysql.time_zone_transition t, 
+       mysql.time_zone_transition t2, 
+       mysql.user u  
+       order  by authentication_string ) x
+       ;
+        
