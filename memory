@@ -87,3 +87,25 @@ DELIMITER ;
 
   call mem_tmp(10000,100000);
 
+
+sysbench ./oltp_write_only.lua \
+--db-driver=mysql \
+--mysql-user=xxx \
+--mysql-password=xxx \
+--mysql-db=sysbench \
+--mysql-host=xxxx \
+--threads=10 --rand-type=uniform \
+--tables=30 --table-size=1000000 \
+prepare
+
+set tmp_table_size=5077721600;
+set max_heap_table_size=5077721600;
+
+CREATE TEMPORARY TABLE in_mem_1(
+    id int(11) NOT NULL,
+    k int(11) NOT NULL DEFAULT '0', 
+    c char(120) NOT NULL DEFAULT '', 
+    PAD char(60) NOT NULL DEFAULT '') 
+ENGINE=memory;
+
+insert into in_mem_1 select * from sbtest1;
