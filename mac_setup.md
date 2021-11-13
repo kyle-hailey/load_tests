@@ -76,43 +76,43 @@ install CLI
     aws configure --profile kylelf
  
  
- SQL*Plus Oracle
+SQL*Plus Oracle
 
 see: http://oraontap.blogspot.com/2020/01/mac-os-x-catalina-and-oracle-instant.html
 
-scp -i "/Users/kylelf/pems/kyle_ec2.pem"  \
-ec2-user@ec2-184-73-34-224.compute-1.amazonaws.com:/home/ec2-user/tars/oracle_mac.tar.Z 
-uncompress oracle_mac.tar.Z
-cd /Applications
-tar xvf ~/oracle_mac.tar
-cd oracle
-chmod u+w *
- xattr -r -d -s com.apple.quarantine oracle
+    scp -i "/Users/kylelf/pems/kyle_ec2.pem"  \
+    ec2-user@ec2-184-73-34-224.compute-1.amazonaws.com:/home/ec2-user/tars/oracle_mac.tar.Z 
+    uncompress oracle_mac.tar.Z
+    cd /Applications
+    tar xvf ~/oracle_mac.tar
+    cd oracle
+    chmod u+w *
+     xattr -r -d -s com.apple.quarantine oracle
 
 
 
 install pip
 
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-alias python=python3
-python get-pip.py
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    alias python=python3
+    python get-pip.py
 
 
 SQL Server   SQLCMD
 
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-# brew install --no-sandbox msodbcsql mssql-tools
-# for silent install ACCEPT_EULA=y brew install --no-sandbox msodbcsql mssql-tools
+    # brew install --no-sandbox msodbcsql mssql-tools
+    # for silent install ACCEPT_EULA=y brew install --no-sandbox msodbcsql mssql-tools
  
-brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
-brew update
-brew install mssql-tools
+    brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
+    brew update
+    brew install mssql-tools
 
-sqlcmd -S <HOST>,1433 -U <USER> -P <PASSWORD>
+    sqlcmd -S <HOST>,1433 -U <USER> -P <PASSWORD>
 
 mysql-cli
 
- sudo pip install mssql-cli --ignore-installed six 
+    sudo pip install mssql-cli --ignore-installed six 
  
- mssql-cli -S <HOST>,1433 -U <USER> -P <PASSWORD>
+    mssql-cli -S <HOST>,1433 -U <USER> -P <PASSWORD>
