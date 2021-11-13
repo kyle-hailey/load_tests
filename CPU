@@ -1,0 +1,92 @@
+Mysql
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS minute_rollup$$
+CREATE PROCEDURE minute_rollup(input_number INT)
+BEGIN
+DECLARE counter int;
+DECLARE out_number float;
+set counter=0;
+WHILE counter <= input_number DO
+SET out_number=SQRT(rand());
+SET counter = counter + 1;
+END WHILE;
+END$$
+DELIMITER ;   
+call minute_rollup(100000000);
+
+
+
+
+
+Postgres
+
+
+
+create or replace function minute_rollup (n INTEGER)
+  returns integer
+as $$
+declare
+  foo integer;
+  counter INTEGER := 0 ;
+begin
+ WHILE counter <= n LOOP
+    foo := sqrt(random());
+    counter := counter + 1 ;
+  end loop;
+  RETURN 1;
+end;
+$$
+language plpgsql;
+
+select minute_rollup(100000000);
+
+
+
+
+Oracle
+
+
+
+
+CREATE OR REPLACE PROCEDURE minute_rollup (limit IN INTEGER) 
+IS
+x INTEGER ;
+BEGIN
+      FOR i IN 2..limit LOOP
+       x:=sqrt(limit);         
+      END LOOP;
+END;
+/
+
+
+exec minute_rollup(1000000000);
+
+
+
+SQL Server
+
+
+
+
+CREATE PROCEDURE minute_rollup
+@loops BIGINT,
+@cnt  INT,
+@val INT
+AS
+  -- PRINT @cnt
+SET @cnt = 1;
+WHILE (@cnt <= @loops)
+BEGIN
+  -- PRINT @cnt
+  SET @cnt = @cnt + 1
+  SET @val = SQRT(@cnt)
+END
+GO
+
+
+execute minute_rollup 100000000, 1, 0
+go
+
