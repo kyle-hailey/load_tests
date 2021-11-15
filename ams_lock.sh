@@ -57,6 +57,7 @@ for j in  4 8 16 32 64 128; do
       echo "set autocommit=0;" >> bctmp.sql
       echo "SET SESSION innodb_lock_wait_timeout = $SLEEP_AFTER_TEST ;" >> bctmp.sql
       echo " select * from locks for update;" >> bctmp.sql
+      echo "select sleep($SLEEP_AFTER_TEST); " >> bctmp.sql
       echo "exit" >> bctmp.sql
       echo " " >> bctmp.sql
       cmd="mysql -A  -f --tee=$MYTEST --host=$HOST  --user=$USER  --password=$PW --port=$PORT kyle   < bctmp.sql &"
