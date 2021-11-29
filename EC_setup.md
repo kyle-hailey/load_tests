@@ -70,6 +70,11 @@ Once “aws” is configured you can run the CLI like
      --period-in-seconds 86400
 
 Jmeter
+see http://datavirtualizer.com/jmeter-getting-started/
+wget https://s3.amazonaws.com/kylelfpi/apache_jmeter.gz
+tar xvfPz apache_jmeter.gz
+NOTE: for SSL errors use “useSSL=false”
+
 
     wget https://s3.amazonaws.com/kylelfpi/apache_jmeter.gz
     wget https://s3.amazonaws.com/kylelfpi/postgresql-9.4-jdbc4.jar
