@@ -204,15 +204,20 @@ prepare
 
 run
 
-    sysbench oltp_read_write \
-           --db-driver=mysql \
-           --mysql-host=$host  \
-           --mysql-db=$db \
-           --mysql-user=$user \
-           --mysql-password=$password \
-           --tables=8 \
-           --table-size=200000 \
-           --threads=8 prepare
+   #   --oltp-table-size=200000 \
+   #   --oltp-tables-count=8 \
+     sysbench   \
+        --db-driver=pgsql   \
+        --report-interval=2   \
+        --threads=8  \
+        --time=60   \
+        --pgsql-host=gk-rds-postgres-sandbox-instance-1.c7ug0vvtkhqv.us-east-1.rds.amazonaws.com \
+        --pgsql-port=5432   \
+        --pgsql-user=postgres  \
+        --pgsql-password=datad0g!  \
+        --pgsql-db=sysbench   \
+        --test=/usr/share/sysbench/oltp_read_only.lua  \
+         run
 
 Initialize variables
 
